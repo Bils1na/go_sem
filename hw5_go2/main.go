@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 	"strconv"
 	"strings"
 
@@ -27,8 +28,13 @@ func main() {
 	r.Get("/friends/{userID}", getFriendsHandler)
 	r.Put("/{userID}", updateUserAgeHandler)
 
-	log.Println("Server is running on port 8080")
-	http.ListenAndServe(":8080", r)
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
+	}
+
+	log.Println("Server is running on port", port)
+	http.ListenAndServe(":" + port, r)
 }
 
 func createUserHandler(w http.ResponseWriter, r *http.Request) {

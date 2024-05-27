@@ -22,6 +22,10 @@ type User struct {
 	Friends []int    
 }
 
+var {
+	ds *sql.DB
+}
+
 func main() {
 	initDB()
 	defer closeDB()
@@ -198,9 +202,9 @@ func getFriendsHandler(w http.ResponseWriter, r *http.Request) {
    
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(friends)
-   }
+}
    
-   func updateUserAgeHandler(w http.ResponseWriter, r *http.Request) {
+func updateUserAgeHandler(w http.ResponseWriter, r *http.Request) {
 	userID := chi.URLParam(r, "userID")
 	var request struct {
 	 	NewAge int
@@ -224,9 +228,9 @@ func getFriendsHandler(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	message := "возраст пользователя успешно обновлён"
 	json.NewEncoder(w).Encode(map[string]string{"message": message})
-   }
+}
    
-   func getUserByID(db *sql.DB, id int) (*User, error) {
+func getUserByID(db *sql.DB, id int) (*User, error) {
 	var user User
 	var friends string
 	row := db.QueryRow("SELECT id, name, age, friends FROM users WHERE id = ?", id)
@@ -235,23 +239,23 @@ func getFriendsHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	user.Friends = stringSliceToIntSlice(strings.Split(friends, ","))
 	return &user, nil
-   }
+}
    
-   func updateUserFriends(db *sql.DB, id int, friends []int) error {
+func updateUserFriends(db *sql.DB, id int, friends []int) error {
 	friendsStr := strings.Join(intSliceToStringSlice(friends), ",")
 	_, err := db.Exec("UPDATE users SET friends = ? WHERE id = ?", friendsStr, id)
 	return err
-   }
+}
    
-   func intSliceToStringSlice(ints []int) []string {
+func intSliceToStringSlice(ints []int) []string {
 	strs := make([]string, len(ints))
 	for i, v := range ints {
 	 	strs[i] = strconv.Itoa(v)
 	}
 	return strs
-   }
+}
    
-   func stringSliceToIntSlice(strs []string) []int {
+func stringSliceToIntSlice(strs []string) []int {
 	ints := make([]int, len(strs))
 	for i, v := range strs {
 		if val, err := strconv.Atoi(v); err == nil {
@@ -259,9 +263,9 @@ func getFriendsHandler(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 	return ints
-   }
+}
    
-   func removeFriend(friends []int, friendID int) []int {
+func removeFriend(friends []int, friendID int) []int {
 	newFriends := []int{}
 	for _, id := range friends {
 		if id != friendID {
@@ -269,4 +273,4 @@ func getFriendsHandler(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 	return newFriends
-   }
+}

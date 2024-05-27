@@ -15,6 +15,13 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
+type User struct {
+	ID      int      
+	Name    string   
+	Age     int      
+	Friends []int    
+}
+
 func main() {
 	initDB()
 	defer closeDB()
@@ -63,8 +70,8 @@ func createUserHandler(w http.ResponseWriter, r *http.Request) {
 
 func makeFriendsHandler(w http.ResponseWriter, r *http.Request) {
  	var request struct {
-		SourceID int `json:"source_id"`
-		TargetID int `json:"target_id"`
+		SourceID int 
+		TargetID int 
 	}
 	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
@@ -117,7 +124,7 @@ func makeFriendsHandler(w http.ResponseWriter, r *http.Request) {
 
 func deleteUserHandler(w http.ResponseWriter, r *http.Request) {
 	var request struct {
-		TargetID int `json:"target_id"`
+		TargetID int
 	}
 	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
@@ -196,7 +203,7 @@ func getFriendsHandler(w http.ResponseWriter, r *http.Request) {
    func updateUserAgeHandler(w http.ResponseWriter, r *http.Request) {
 	userID := chi.URLParam(r, "userID")
 	var request struct {
-	 	NewAge int `json:"new age"`
+	 	NewAge int
 	}
 	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)

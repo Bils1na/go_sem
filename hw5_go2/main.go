@@ -22,10 +22,6 @@ type User struct {
 	Friends []int    
 }
 
-var {
-	ds *sql.DB
-}
-
 func main() {
 	initDB()
 	defer closeDB()
